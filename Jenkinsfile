@@ -33,7 +33,7 @@ pipeline {
         stage('Testing') {
             steps {
                 git 'https://github.com/Manojkumar95426/FunctionalTesting.git'
-                sh 'java -jar /var/lib/jenkins/workspace/dp-2/testing.jar'
+                sh 'java -jar /var/lib/jenkins/workspace/DeclarativePipeline1/testing.jar'
             }
         }
 
