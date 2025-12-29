@@ -1,48 +1,44 @@
-pipeline {
-    agent any
-    
-    stages {
-        stage('ContinuousDownload') {
-            steps {
-                // Main application source code
-                git 'https://github.com/Manojkumar95426/maven-n.git' 
-            }
-        }
-        
-        stage('Build') {
-            steps {
-                sh 'mvn package'
-            }
-        }
-        
-        stage('Deployment') {
-            steps {
-                // Deploying to Test environment
-                deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: 'dbe3ba17-2fe3-4eb9-96a1-c9002539cda7', path: '', url: 'http://172.31.30.254:8080')], 
-                       contextPath: 'testapp', 
-                       war: 'target/*.war'
-            }
-        }
-        
-        stage('Testing') {
-            steps {
-                // Use dir() to download testing tools into a sub-folder
-                dir('test-scripts') {
-                    git 'https://github.com/Manojkumar95426/FunctionalTesting.git'
-                }
-                // Run the jar using a relative path to keep it portable
-                sh 'java -jar test-scripts/testing.jar'
-            }
-        }
-        
-        stage('Delivery') {
-            steps {
-                // Deploying to Production environment
-                // This will now work because 'target/*.war' was not deleted by the git command
-                deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: 'dbe3ba17-2fe3-4eb9-96a1-c9002539cda7', path: '', url: 'http://172.31.21.126:8080')], 
-                       contextPath: 'prodapp', 
-                       war: 'target/*.war'
-            }
-        }
-    }
-}
+pipeline
+{
+    agent any
+    
+    stages
+    {
+        stage('ContinuousDownload')
+        {
+            steps
+            {
+                git 'https://github.com/Manojkumar95426/maven-n.git'
+            }
+        }
+        stage('Build')
+        {
+            steps
+            {
+                sh 'mvn package'
+            }
+        }
+        stage('Deployment')
+        {
+            steps
+            {
+                deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: 'd3058440-8aa0-40d7-9658-695a699b868d', path: '', url: 'http://172.31.30.254:8080')], contextPath: 'testapp1', war: '**/*.war'
+            }
+        }
+        stage('Testing')
+        {
+            steps
+            {
+                git 'https://github.com/Manojkumar95426/FunctionalTesting.git'
+                sh 'java -jar  /var/lib/jenkins/workspace/dp-2/testing.jar'
+            }
+        }
+        stage('Delivery')
+        {
+            steps
+            {
+               deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: 'd3058440-8aa0-40d7-9658-695a699b868d', path: '', url: 'http://172.31.21.126:8080')], contextPath: 'app1', war: '**/*.war'
+            }
+        }
+    }
+} 
