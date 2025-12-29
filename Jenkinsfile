@@ -8,7 +8,7 @@ pipeline
         {
             steps
             {
-                git 'https://github.com/Manojkumar95426/maven.git' 
+                git 'https://github.com/Manojkumar95426/maven-n.git' 
             }
         }
         stage('Build')
